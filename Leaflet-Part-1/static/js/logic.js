@@ -1,7 +1,6 @@
 const url = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_week.geojson";
 
 d3.json(url).then(function (data) {
-    console.log(data.features);
     let earthquakeData = data.features
     createFeatures(earthquakeData)
 });
@@ -46,7 +45,9 @@ function createFeatures(earthquakeData) {
         },
         onEachFeature: function onEachFeature(feature, layer) {
             if (feature.properties && feature.properties.place) {
-                layer.bindPopup(`<h2 style="color:blue">${feature.properties.place}</h2> <hr> <h3>${new Date(feature.properties.time)}</h3>`);
+                layer.bindPopup(`<h2 style="color:blue">${feature.properties.place}</h2> <hr> <h3>${new Date(feature.properties.time)}</h3>\ 
+                <hr> <h3>mag: ${feature.properties.mag}</h3> <hr> <h3>magType: ${feature.properties.magType}</h3>\
+                <hr> <h3>depth: ${feature.geometry.coordinates[2]}</h3>`);
             }
         }
     })
@@ -60,16 +61,6 @@ function createMap(earthquakes) {
     let street = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
     });
-
-    // Create a baseMaps object.
-    let baseMaps = {
-        "Street Map": street,
-    };
-
-    // Create an overlays object.
-    let overlayMaps = {
-        "Earthquake Data": earthquakes
-    }
 
     // Create map
     let map = L.map("map", {
@@ -85,7 +76,7 @@ function createMap(earthquakes) {
     legend.onAdd = function (map) {
 
         var div = L.DomUtil.create('div', 'info legend'),
-        grades = [-10, 30, 50, 70, 90]
+        grades = [-10, 10, 30, 50, 70, 90]
         var colors = [
                 "#98EE00",
                 "#D4EE00",
@@ -107,9 +98,4 @@ function createMap(earthquakes) {
     };
 
     legend.addTo(map);
-
-    // Create control layer
-    L.control.layers(baseMaps, overlayMaps, {
-        collapsed: false
-    }).addTo(map);
 };
