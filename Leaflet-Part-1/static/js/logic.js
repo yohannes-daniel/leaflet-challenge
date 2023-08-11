@@ -85,18 +85,28 @@ function createMap(earthquakes) {
     legend.onAdd = function (map) {
 
         var div = L.DomUtil.create('div', 'info legend'),
-            grades = [0, 10, 20, 50, 100, 200, 500, 1000],
-            labels = [];
+        grades = [-10, 30, 50, 70, 90]
+        var colors = [
+                "#98EE00",
+                "#D4EE00",
+                "#EECC00",
+                "#EE9C00",
+                "#EA822C",
+                "#EA2C2C"];;
 
         // loop through our density intervals and generate a label with a colored square for each interval
-        for (let i = 0; i < grades.length; i++) {
-            div.innerHTML +=
-                '<i style="background:' + getColor(grades[i] + 1) + '"></i> ' +
-                grades[i] + (grades[i + 1] ? '&ndash;' + grades[i + 1] + '<br>' : '+');
-        }
+        for (var i = 0; i < grades.length; i++) {
+            div.innerHTML += "<i style='background: "
+              + colors[i]
+              + "'></i> "
+              + grades[i]
+              + (grades[i + 1] ? "&ndash;" + grades[i + 1] + "<br>" : "+");
+          }
 
         return div;
     };
+
+    legend.addTo(map);
 
     // Create control layer
     L.control.layers(baseMaps, overlayMaps, {
